@@ -1,10 +1,12 @@
 function createGrid(gridSize) {
+    let container = document.getElementById('container');
+    let sideLength = container.offsetWidth / gridSize + "px";
     for (let i=0; i < gridSize * gridSize; i++) {
         let square = document.createElement('div');
         square.classList.add('grid-item');
-        square.style.width = document.getElementById('container').offsetWidth / gridSize + "px";
-        square.style.height = square.style.width;
-        document.getElementById('container').appendChild(square);
+        square.style.width = sideLength;
+        square.style.height = sideLength;
+        container.appendChild(square);
     }
 }
 
@@ -30,35 +32,39 @@ deleteGrid =()=> {
     grids.forEach(item => item.remove());
 }
 
-const buttonContainer = document.createElement('div');
-buttonContainer.classList.add('button-container');
+function initialize(gridSize) {
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
 
-const clearButton = document.createElement('button');
-clearButton.innerText = 'Clear Grid';
-buttonContainer.appendChild(clearButton);
+    const clearButton = document.createElement('button');
+    clearButton.innerText = 'Clear Grid';
+    buttonContainer.appendChild(clearButton);
 
-const resizeButton = document.createElement('button');
-resizeButton.innerText = 'Resize Grid';
-buttonContainer.appendChild(resizeButton);
+    const resizeButton = document.createElement('button');
+    resizeButton.innerText = 'Resize Grid';
+    buttonContainer.appendChild(resizeButton);
 
-document.getElementById('container').parentNode.prepend(buttonContainer);
+    document.getElementById('container').parentNode.prepend(buttonContainer);
 
-createGrid(16);
-enableSketch();
+    createGrid(gridSize);
+    enableSketch();
 
-clearButton.onclick =()=> clearGrid();
-resizeButton.onclick =()=> {
-    let newGridSize = prompt('Select new size for grid from 1-100.');
-    if (newGridSize > 0) {
-        if (newGridSize > 100) {
-        alert('Size cannot be over 100. The grid size will be 100.');
-        let newGridSize = 100;
+    clearButton.onclick =()=> clearGrid();
+    resizeButton.onclick =()=> {
+        let newGridSize = prompt('Select new size for grid from 1-100.');
+        if (newGridSize > 0) {
+            if (newGridSize > 100) {
+            alert('Size cannot be over 100. The grid size will be 100.');
+            let newGridSize = 100;
+            }
+            deleteGrid();
+            createGrid(newGridSize);
+            enableSketch();  
         }
-        deleteGrid();
-        createGrid(newGridSize);
-        enableSketch();  
-    }
-    else if (typeof newGridSize !== 'number') {
-        return;
+        else if (typeof newGridSize !== 'number') {
+            return;
+        }
     }
 }
+
+initialize(16);
